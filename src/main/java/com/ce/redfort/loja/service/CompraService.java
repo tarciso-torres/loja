@@ -1,23 +1,23 @@
 package com.ce.redfort.loja.service;
 
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import com.ce.redfort.loja.client.FornecedorClient;
 import com.ce.redfort.loja.dto.CompraDTO;
 import com.ce.redfort.loja.dto.InfoFornecedorDTO;
 
 @Service
 public class CompraService {
+		
+	@Autowired
+	private FornecedorClient fornecedorClient;
 	
 	public void realizaCompra(CompraDTO compraDTO) {
-		RestTemplate client = new RestTemplate();
 		
-		ResponseEntity<InfoFornecedorDTO> exchange = client.exchange("http://localhost:8081/info/"+ compraDTO.getEndereco().getEstado(), 
-				HttpMethod.GET, null, InfoFornecedorDTO.class);
+		InfoFornecedorDTO infoPorEstado = fornecedorClient.getInfoPorEstado(compraDTO.getEndereco().getEstado());
 		
-		System.out.println(exchange.getBody().getEndereco());
+		System.out.println(infoPorEstado.getEndereco());
 	}
 
 }
